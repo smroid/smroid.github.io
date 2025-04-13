@@ -1,0 +1,19 @@
+{
+  "files": [
+    "default_database.npz",
+    "default_database.npz.sig",
+    "hopper-server.gz",
+    "hopper-server.gz.sig",
+    "hopper_flutter.tar.gz",
+    "hopper_flutter.tar.gz.sig",
+    "merged_catalog.sqlite.gz",
+    "merged_catalog.sqlite.gz.sig",
+    "restart.sh",
+    "restart.sh.sig",
+    "unpack.sh",
+    "unpack.sh.sig",
+    "version.txt"
+  ],
+  "generated_at": "2025-04-13T10:23:19.589505",
+  "count": 13
+}
