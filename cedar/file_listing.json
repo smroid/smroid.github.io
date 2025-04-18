@@ -8,12 +8,13 @@
     "hopper_flutter.tar.gz.sig",
     "merged_catalog.sqlite.gz",
     "merged_catalog.sqlite.gz.sig",
+    "mp_com.dat.gz",
+    "mp_com.dat.gz.sig",
     "restart.sh",
     "restart.sh.sig",
     "unpack.sh",
     "unpack.sh.sig",
     "version.txt"
   ],
-  "generated_at": "2025-04-13T18:46:22.142206",
-  "count": 13
+  "count": 15
 }
