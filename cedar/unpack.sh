@@ -21,6 +21,7 @@ sudo setcap "$caps" bin/hopper-server
 # Extract data files.
 cp default_database.npz data/default_database.npz
 gunzip -k -c merged_catalog.sqlite.gz > data/merged_catalog.sqlite
+gunzip -k -c mp_com.dat.gz > data/mp_com.dat
 
 # Extract hopper_flutter subdirectory of hopper-aim.
 tar -xzf hopper_flutter.tar.gz -C hopper-aim
