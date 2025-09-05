@@ -9,4 +9,3 @@ fi
 # Current working directory is the destination Updater component.
 
 sudo systemctl restart updater.service
-
