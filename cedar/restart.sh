@@ -8,5 +8,4 @@ fi
 
 # Current working directory is the destination Cedar component.
 
-
 sudo systemctl restart cedar.service
