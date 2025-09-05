@@ -10,4 +10,3 @@ fi
 
 sudo systemctl restart updater.service
 
-
