@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # Exit on any error.
+set -e  # Exit on any error
 
 if [ "$#" -ne 0 ]; then
     echo "Usage: $0"
