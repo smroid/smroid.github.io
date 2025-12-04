@@ -9,8 +9,6 @@
     "merged_catalog.sqlite.gz",
     "merged_catalog.sqlite.gz.sig",
     "mp_com.dat",
-    "mp_com.dat.gz",
-    "mp_com.dat.gz.sig",
     "mp_com.dat.sig",
     "restart.sh",
     "restart.sh.sig",
@@ -18,5 +16,5 @@
     "unpack.sh.sig",
     "version.txt"
   ],
-  "count": 17
+  "count": 15
 }
