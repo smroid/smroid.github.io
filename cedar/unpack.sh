@@ -43,7 +43,7 @@ if sudo nmcli con show cedar-ap > /dev/null 2>&1; then
     echo "Found existing cedar-ap connection, updating settings..."
     sudo nmcli con modify cedar-ap wifi-sec.proto rsn
     sudo nmcli con modify cedar-ap wifi-sec.pairwise ccmp
-    sudo nmcli con modify cedar-ap -wifi-sec.group
+    sudo nmcli con modify cedar-ap wifi-sec.group ""
     echo "WiFi access point configuration updated"
 else
     echo "cedar-ap connection not found, skipping WiFi configuration update"
