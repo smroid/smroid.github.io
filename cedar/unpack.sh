@@ -36,4 +36,16 @@ cp mp_com.dat mp_com.dat.sig data
 echo "Extracting hopper_flutter..."
 tar -xzf hopper_flutter.tar.gz -C hopper-aim
 
+# Update WiFi access point configuration if it exists.
+echo "Updating WiFi access point configuration..."
+if nmcli con show cedar-ap > /dev/null 2>&1; then
+    echo "Found existing cedar-ap connection, updating settings..."
+    nmcli con modify cedar-ap wifi-sec.proto rsn
+    nmcli con modify cedar-ap wifi-sec.pairwise ccmp
+    nmcli con modify cedar-ap wifi-sec.group --
+    echo "WiFi access point configuration updated"
+else
+    echo "cedar-ap connection not found, skipping WiFi configuration update"
+fi
+
 echo "Unpack complete!"
