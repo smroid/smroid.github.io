@@ -47,4 +47,50 @@ else
     echo "cedar-ap connection not found, skipping WiFi configuration update"
 fi
 
+# Update cedar.service with restart configuration (non-fatal if this fails).
+echo "Updating cedar.service systemd configuration..."
+if sudo bash << 'UPDATEEOF'
+SERVICE_FILE="/lib/systemd/system/cedar.service"
+TEMP_FILE=$(mktemp)
+
+awk '
+    /^(Restart|RestartSec|StartLimitInterval|StartLimitBurst)=/ { next }
+    /^ExecStart=/ {
+        print
+        print "Restart=on-failure"
+        print "RestartSec=5"
+        print "StartLimitInterval=60"
+        print "StartLimitBurst=3"
+        next
+    }
+    { print }
+' "$SERVICE_FILE" > "$TEMP_FILE"
+
+mv "$TEMP_FILE" "$SERVICE_FILE"
+UPDATEEOF
+then
+    sudo systemctl daemon-reload
+    echo "cedar.service updated and systemd reloaded"
+else
+    echo "Warning: failed to update cedar.service, continuing anyway"
+fi
+
+# Disable WiFi power save to prevent CYW43439 SDIO bus lockups.
+echo "Updating cedar-ap-power.service to disable WiFi power save..."
+if sudo bash << 'POWERSAVEEOF'
+AP_POWER_SERVICE="/etc/systemd/system/cedar-ap-power.service"
+if [ -f "$AP_POWER_SERVICE" ] && ! grep -q "power_save off" "$AP_POWER_SERVICE"; then
+    sed -i '/iwconfig wlan0 txpower/a ExecStart=/sbin/iw dev wlan0 set power_save off' "$AP_POWER_SERVICE"
+    systemctl daemon-reload
+    echo "WiFi power save disable added to cedar-ap-power.service"
+else
+    echo "cedar-ap-power.service not found or already patched"
+fi
+POWERSAVEEOF
+then
+    echo "WiFi power save configuration updated"
+else
+    echo "Warning: failed to update WiFi power save setting, continuing anyway"
+fi
+
 echo "Unpack complete!"
