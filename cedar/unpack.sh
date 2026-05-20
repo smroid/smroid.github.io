@@ -93,4 +93,33 @@ else
     echo "Warning: failed to update WiFi power save setting, continuing anyway"
 fi
 
+# Enable IMX290/IMX462 High Conversion Gain mode via kernel module parameter.
+echo "Enabling IMX290/IMX462 High Conversion Gain mode..."
+if ! grep -qx "options imx290 hcg_mode=1" /etc/modprobe.d/imx290.conf 2>/dev/null; then
+    sudo bash -c 'cat > /etc/modprobe.d/imx290.conf <<EOF
+options imx290 hcg_mode=1
+EOF'
+    echo "  Written /etc/modprobe.d/imx290.conf"
+else
+    echo "  /etc/modprobe.d/imx290.conf already correct, skipping"
+fi
+
+# Update boot partition kernel to match installed kernel package.
+# apt upgrade installs new kernels to /boot on the ext4 partition but the
+# bootloader reads kernel8.img from the FAT partition at /boot/firmware.
+# A reboot is required for a newly copied kernel to take effect.
+# (Pi 5 / BCM2712 not covered.)
+echo "Checking boot partition kernel..."
+NEWEST_V8=$(ls /boot/vmlinuz-*rpi-v8 2>/dev/null | sort -V | tail -1)
+if [ -n "$NEWEST_V8" ]; then
+    if cmp -s "$NEWEST_V8" /boot/firmware/kernel8.img; then
+        echo "  kernel8.img already matches $(basename $NEWEST_V8), skipping"
+    else
+        echo "  Installing $(basename $NEWEST_V8) as kernel8.img (effective on next reboot)"
+        sudo cp "$NEWEST_V8" /boot/firmware/kernel8.img
+    fi
+else
+    echo "  No rpi-v8 kernel found, skipping kernel8.img update"
+fi
+
 echo "Unpack complete!"
