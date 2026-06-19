@@ -7,5 +7,7 @@ if [ "$#" -ne 0 ]; then
 fi
 
 # Current working directory is the destination Updater component.
-
-sudo systemctl restart updater.service
+# Run in background: systemctl restart kills this process, so we must not wait
+# for it to return. Note that future versions of updater.rs won't be invoking
+# restart.sh when updating itself.
+sudo systemctl restart updater.service &
