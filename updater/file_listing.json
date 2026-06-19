@@ -1,0 +1,14 @@
+{
+  "files": [
+    "cedar-updater.gz",
+    "cedar-updater.gz.sig",
+    "public_key.pem",
+    "public_key.pem.sig",
+    "restart.sh",
+    "restart.sh.sig",
+    "unpack.sh",
+    "unpack.sh.sig",
+    "version.txt"
+  ],
+  "count": 9
+}
