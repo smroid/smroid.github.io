@@ -77,16 +77,30 @@ else
     echo "Warning: failed to update cedar.service, continuing anyway"
 fi
 
-# Disable WiFi power save to prevent CYW43439 SDIO bus lockups.
+# Update cedar-ap-power.service: set txpower to 14 and disable power save.
 echo "Updating cedar-ap-power.service to disable WiFi power save..."
 if sudo bash << 'POWERSAVEEOF'
 AP_POWER_SERVICE="/etc/systemd/system/cedar-ap-power.service"
-if [ -f "$AP_POWER_SERVICE" ] && ! grep -q "power_save off" "$AP_POWER_SERVICE"; then
+if [ ! -f "$AP_POWER_SERVICE" ]; then
+    echo "cedar-ap-power.service not found, skipping"
+    exit 0
+fi
+CHANGED=0
+if ! grep -q "power_save off" "$AP_POWER_SERVICE"; then
     sed -i '/iwconfig wlan0 txpower/a ExecStart=/sbin/iw dev wlan0 set power_save off' "$AP_POWER_SERVICE"
-    systemctl daemon-reload
     echo "WiFi power save disable added to cedar-ap-power.service"
-else
-    echo "cedar-ap-power.service not found or already patched"
+    CHANGED=1
+fi
+if ! grep -q "txpower 14" "$AP_POWER_SERVICE"; then
+    sed -i 's/iwconfig wlan0 txpower [0-9]*/iwconfig wlan0 txpower 14/' "$AP_POWER_SERVICE"
+    echo "WiFi txpower updated to 14 in cedar-ap-power.service"
+    CHANGED=1
+fi
+if [ $CHANGED -eq 0 ]; then
+    echo "cedar-ap-power.service already correct, skipping"
+fi
+if [ $CHANGED -eq 1 ]; then
+    systemctl daemon-reload
 fi
 POWERSAVEEOF
 then
