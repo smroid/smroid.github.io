@@ -2,7 +2,7 @@
 set -e  # Exit on any error
 
 if [ "$#" -ne 0 ]; then
-    echo "Usage: $0"
+    echo "Usage: $0" >&2
     exit 1
 fi
 
@@ -16,8 +16,8 @@ mkdir -p hopper-aim
 # Extract hopper-server binary.
 echo "Extracting hopper-server binary..."
 gunzip -k -c hopper-server.gz > bin/hopper-server
-[ -s bin/hopper-server ] || { echo "ERROR: bin/hopper-server is empty after extraction"; exit 1; }
-file bin/hopper-server | grep -q "ELF" || { echo "ERROR: bin/hopper-server is not an ELF binary"; exit 1; }
+[ -s bin/hopper-server ] || { echo "ERROR: bin/hopper-server is empty after extraction" >&2; exit 1; }
+file bin/hopper-server | grep -q "ELF" || { echo "ERROR: bin/hopper-server is not an ELF binary" >&2; exit 1; }
 # Set capabilities.
 echo "Setting permissions and capabilities on hopper-server..."
 chmod a+x bin/hopper-server

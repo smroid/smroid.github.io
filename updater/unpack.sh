@@ -2,7 +2,7 @@
 set -e  # Exit on any error
 
 if [ "$#" -ne 0 ]; then
-    echo "Usage: $0"
+    echo "Usage: $0" >&2
     exit 1
 fi
 
@@ -15,14 +15,15 @@ mkdir -p data
 # Extract cedar-updater binary.
 echo "Extracting cedar-updater binary..."
 gunzip -k -c cedar-updater.gz > bin/cedar-updater
-[ -s bin/cedar-updater ] || { echo "ERROR: bin/cedar-updater is empty after extraction"; exit 1; }
-file bin/cedar-updater | grep -q "ELF" || { echo "ERROR: bin/cedar-updater is not an ELF binary"; exit 1; }
+[ -s bin/cedar-updater ] || { echo "ERROR: bin/cedar-updater is empty after extraction" >&2; exit 1; }
+file bin/cedar-updater | grep -q "ELF" || { echo "ERROR: bin/cedar-updater is not an ELF binary" >&2; exit 1; }
 echo "Setting permissions on cedar-updater..."
 chmod a+x bin/cedar-updater
 
 # Extract/emplace data files.
 echo "Copying data files..."
 cp public_key.pem data/public_key.pem
+openssl rsa -pubin -in data/public_key.pem -noout 2>/dev/null || { echo "ERROR: data/public_key.pem is not a valid RSA public key" >&2; exit 1; }
 
 # Update updater.service with restart configuration (non-fatal if this fails).
 echo "Updating updater.service systemd configuration..."
