@@ -43,7 +43,7 @@ tar -xzf hopper_flutter.tar.gz -C hopper-aim
 echo "Updating WiFi access point configuration..."
 if sudo nmcli con show cedar-ap > /dev/null 2>&1; then
     echo "Found existing cedar-ap connection, updating settings..."
-    sudo nmcli con modify cedar-ap wifi-sec.proto rsn wifi-sec.pairwise ccmp wifi-sec.group ""
+    sudo nmcli con modify cedar-ap wifi-sec.proto rsn wifi-sec.pairwise ccmp wifi-sec.group "" wifi-sec.pmf disable
     echo "WiFi access point configuration updated"
 else
     echo "cedar-ap connection not found, skipping WiFi configuration update"
@@ -111,13 +111,38 @@ fi
 
 # Enable IMX290/IMX462 High Conversion Gain mode via kernel module parameter.
 echo "Enabling IMX290/IMX462 High Conversion Gain mode..."
-if ! grep -qx "options imx290 hcg_mode=1" /etc/modprobe.d/imx290.conf 2>/dev/null; then
-    sudo bash -c 'cat > /etc/modprobe.d/imx290.conf <<EOF
+sudo bash -c 'cat > /etc/modprobe.d/imx290.conf <<EOF
 options imx290 hcg_mode=1
 EOF'
-    echo "  Written /etc/modprobe.d/imx290.conf"
+echo "  Written /etc/modprobe.d/imx290.conf"
+
+# Configure brcmfmac WiFi driver options for AP mode stability.
+echo "Configuring brcmfmac WiFi driver options for AP mode stability..."
+sudo bash -c 'cat > /etc/modprobe.d/brcmfmac.conf <<EOF
+# Disable P2P (bit 4) to work around raspberrypi/linux issue #7033: iOS 18.6+
+# ANQP action frames trigger a NULL deref in brcmf_p2p_send_action_frame that
+# cascades into an SDIO backplane crash. roamoff=1 avoids background roaming
+# activity that adds SDIO chatter in AP mode.
+# Disable FWSUP (bit 13) so the kernel WPA supplicant handles the 4-way EAPOL
+# handshake rather than the firmware; without this, Pi 4 and similar clients
+# cannot complete WPA2 association to our AP.
+options brcmfmac roamoff=1
+options brcmfmac feature_disable=0x2010
+EOF'
+echo "  Written /etc/modprobe.d/brcmfmac.conf"
+
+# Pin ARM clock to avoid clock-stepping (see wifi.md).
+if ! grep -q "BEGIN thermal clock pin" /boot/firmware/config.txt; then
+    echo "Pinning ARM clock to avoid clock-stepping..."
+    sudo tee -a /boot/firmware/config.txt > /dev/null <<'EOF'
+# BEGIN thermal clock pin
+arm_freq=800
+arm_freq_min=800
+# END thermal clock pin
+EOF
+    echo "  Added thermal clock pin to config.txt"
 else
-    echo "  /etc/modprobe.d/imx290.conf already correct, skipping"
+    echo "Thermal clock pin already present in config.txt, skipping"
 fi
 
 # Update boot partition kernel to match installed kernel package.
