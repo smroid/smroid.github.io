@@ -32,6 +32,10 @@ echo "Extracting merged_catalog.sqlite..."
 gunzip -k -c merged_catalog.sqlite.gz > data/merged_catalog.sqlite
 cp merged_catalog.sqlite.gz.sig data
 
+echo "Extracting mp_com.sqlite..."
+gunzip -k -c mp_com.sqlite.gz > data/mp_com.sqlite
+cp mp_com.sqlite.gz.sig data
+
 echo "Copying mp_com.dat..."
 cp mp_com.dat mp_com.dat.sig data
 
