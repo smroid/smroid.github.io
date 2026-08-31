@@ -11,7 +11,7 @@
     "version.txt"
   ],
   "fileSizes": {
-    "cedar-updater.gz": 1910653,
+    "cedar-updater.gz": 2196459,
     "cedar-updater.gz.sig": 256,
     "public_key.pem": 451,
     "public_key.pem.sig": 256,
@@ -22,8 +22,8 @@
     "version.txt": 6
   },
   "fileSha256": {
-    "cedar-updater.gz": "26e9accaba87ba3d7898950361af1ad182e1df55c289e6797d64ae0624428051",
-    "cedar-updater.gz.sig": "029b80de25056e07c14458a137a576820638e104dea637bccd49532521838264",
+    "cedar-updater.gz": "e16923369cf605784cad2e74d3916261efc0b1af0596ef4f29637a6f18db155d",
+    "cedar-updater.gz.sig": "4de2b9de77457f3480e15390785834ef7a3bcb5bb28c109b44935479a8802e9c",
     "public_key.pem": "dbb0302614f1eb31a4d7128aecac65428274cabc43600ce0a95fc4046a4d19ca",
     "public_key.pem.sig": "7ea64dafd16e422be6cbfcf1b86a899c685c899dd20b88915c4acaf8e4be3f85",
     "restart.sh": "fe7da1aef8924bd44d45b358b0519e7a9aa22881db31c06ca68d0848a775a5fd",
