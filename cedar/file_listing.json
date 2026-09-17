@@ -21,11 +21,11 @@
   "fileSizes": {
     "default_database.npz": 14655563,
     "default_database.npz.sig": 256,
-    "hopper-server.gz": 13220439,
+    "hopper-server.gz": 13288562,
     "hopper-server.gz.sig": 256,
-    "hopper_flutter.tar.gz": 25821842,
+    "hopper_flutter.tar.gz": 25801612,
     "hopper_flutter.tar.gz.sig": 256,
-    "merged_catalog.sqlite.gz": 5294992,
+    "merged_catalog.sqlite.gz": 5299089,
     "merged_catalog.sqlite.gz.sig": 256,
     "mp_com.dat": 531,
     "mp_com.dat.sig": 256,
@@ -40,12 +40,12 @@
   "fileSha256": {
     "default_database.npz": "3bbb922bfaae799788bedc1a3911c3e14210c95d04802700f40b4246c5c04081",
     "default_database.npz.sig": "c8da259a5993246bc0477e0a2309a4451f3a32a8f9c49a21afebbd0844131c68",
-    "hopper-server.gz": "cd65630f9fddbcfc0bb33e91129d5534de4d0155f46f5444e511e3a8fc8ff2eb",
-    "hopper-server.gz.sig": "c9bf7e526307bb0ff4bd1cfc2eb26ce66d3dfe48adf7468ac4c4a03c89ee1fa2",
-    "hopper_flutter.tar.gz": "b047c91d3436017c92d65fa63fb28676dcd97eab23c1c99d6373abbd4e558f56",
-    "hopper_flutter.tar.gz.sig": "5dd492a11fbcfd73624100732c776f71b26aecc391d97d728f8fa3f97f7adcab",
-    "merged_catalog.sqlite.gz": "d1764e57360b10f82d55d91aa0ac7977435ad891ecf96c9057c7a8763e387cd9",
-    "merged_catalog.sqlite.gz.sig": "2fb9277b4bb7c44d6c0f7914898cc6d2bfa3021c9f4cebd4807c0314f64602fd",
+    "hopper-server.gz": "e58939c57b7023fd4290b23081e40ad75bfc80ea66d0d7f5b4fdb1ec3b70a35a",
+    "hopper-server.gz.sig": "0562414b62af1d765ae8253b7d38e7aa907ac46277571e823f05be5ad3dc9385",
+    "hopper_flutter.tar.gz": "605fde4f1c753bb673069feb2c6eafb23f560e4f51aa39001e4a00443b66676d",
+    "hopper_flutter.tar.gz.sig": "706c7982e0f506048a9c70bc59c089a3686dc90658a15979e2ed5f2de3341e20",
+    "merged_catalog.sqlite.gz": "88a62dfdbd7f42b4a0f0f1e58623fd35923b700165485166ce4f6aeb594ae668",
+    "merged_catalog.sqlite.gz.sig": "bd9950cbde121706b92e60f72b865c757b73fe4938b8fba8f252d489e955c921",
     "mp_com.dat": "412e0a5e93e0562ff71293f43090a5a7d71e71ec88a09b8f06392e15b254d356",
     "mp_com.dat.sig": "766074cf2799b7807461f0e175434584aab2ed55ab2ac7289c88fffcaee92f34",
     "mp_com.sqlite.gz": "26875479ebfd27b3360db7badaa6d0da9dc6ba35153a61c310061f8d2bbe28f3",
@@ -54,7 +54,7 @@
     "restart.sh.sig": "553c7fdc3376bc4f6076b37ce8f1b75c17407dc84edfaf434013259e9979151c",
     "unpack.sh": "b72df664415242fe24b529d38750cc1129b094618a7f995f379595c7eb982414",
     "unpack.sh.sig": "90fc808c7b5e7b4da8c0b4506db22ed40fe67f06eb4e95df2e65b8421f135baa",
-    "version.txt": "dfe7d71b3f428eb73ed853f8fded65e2986896e21d69f45ebf06bb623b450e14"
+    "version.txt": "ded1b601e81d31ca1f65c4f3ccf2ebd7992b6390e37bc2a86f3837282f1e00cf"
   },
   "count": 17
 }
