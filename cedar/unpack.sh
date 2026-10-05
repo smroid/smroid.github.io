@@ -167,6 +167,14 @@ else
     echo "  No rpi-v8 kernel found, skipping kernel8.img update"
 fi
 
+# /boot/firmware is a separate vfat filesystem with no journal, so an unclean
+# shutdown shortly after the config.txt or kernel8.img writes above (e.g.
+# someone power-cycling the unit right after the update appears to finish)
+# can leave FAT metadata corrupted even though the writes "completed". -f
+# syncs the containing filesystem (data and FAT metadata), not just file
+# data, before moving on.
+sync -f /boot/firmware
+
 # Mask periodic timers that are useless/harmful on a headless embedded device.
 echo "Masking unnecessary periodic timers..."
 for timer in apt-daily.timer apt-daily-upgrade.timer man-db.timer dpkg-db-backup.timer e2scrub_all.timer; do
