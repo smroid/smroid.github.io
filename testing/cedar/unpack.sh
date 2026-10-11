@@ -2,7 +2,7 @@
 set -e  # Exit on any error
 
 if [ "$#" -ne 0 ]; then
-    echo "Usage: $0"
+    echo "Usage: $0" >&2
     exit 1
 fi
 
@@ -16,6 +16,8 @@ mkdir -p hopper-aim
 # Extract hopper-server binary.
 echo "Extracting hopper-server binary..."
 gunzip -k -c hopper-server.gz > bin/hopper-server
+[ -s bin/hopper-server ] || { echo "ERROR: bin/hopper-server is empty after extraction" >&2; exit 1; }
+file bin/hopper-server | grep -q "ELF" || { echo "ERROR: bin/hopper-server is not an ELF binary" >&2; exit 1; }
 # Set capabilities.
 echo "Setting permissions and capabilities on hopper-server..."
 chmod a+x bin/hopper-server
@@ -30,6 +32,10 @@ echo "Extracting merged_catalog.sqlite..."
 gunzip -k -c merged_catalog.sqlite.gz > data/merged_catalog.sqlite
 cp merged_catalog.sqlite.gz.sig data
 
+echo "Extracting mp_com.sqlite..."
+gunzip -k -c mp_com.sqlite.gz > data/mp_com.sqlite
+cp mp_com.sqlite.gz.sig data
+
 echo "Copying mp_com.dat..."
 cp mp_com.dat mp_com.dat.sig data
 
@@ -37,89 +43,20 @@ cp mp_com.dat mp_com.dat.sig data
 echo "Extracting hopper_flutter..."
 tar -xzf hopper_flutter.tar.gz -C hopper-aim
 
-# Update WiFi access point configuration if it exists.
-echo "Updating WiFi access point configuration..."
-if sudo nmcli con show cedar-ap > /dev/null 2>&1; then
-    echo "Found existing cedar-ap connection, updating settings..."
-    sudo nmcli con modify cedar-ap wifi-sec.proto rsn wifi-sec.pairwise ccmp wifi-sec.group ""
-    echo "WiFi access point configuration updated"
-else
-    echo "cedar-ap connection not found, skipping WiFi configuration update"
-fi
-
-# Update cedar.service with restart configuration (non-fatal if this fails).
-echo "Updating cedar.service systemd configuration..."
-if sudo bash << 'UPDATEEOF'
-SERVICE_FILE="/lib/systemd/system/cedar.service"
-TEMP_FILE=$(mktemp)
-
-awk '
-    /^(Restart|RestartSec|StartLimitInterval|StartLimitBurst)=/ { next }
-    /^ExecStart=/ {
-        print
-        print "Restart=on-failure"
-        print "RestartSec=5"
-        print "StartLimitInterval=60"
-        print "StartLimitBurst=3"
-        next
-    }
-    { print }
-' "$SERVICE_FILE" > "$TEMP_FILE"
-
-mv "$TEMP_FILE" "$SERVICE_FILE"
-UPDATEEOF
-then
-    sudo systemctl daemon-reload
-    echo "cedar.service updated and systemd reloaded"
-else
-    echo "Warning: failed to update cedar.service, continuing anyway"
-fi
-
-# Disable WiFi power save to prevent CYW43439 SDIO bus lockups.
-echo "Updating cedar-ap-power.service to disable WiFi power save..."
-if sudo bash << 'POWERSAVEEOF'
-AP_POWER_SERVICE="/etc/systemd/system/cedar-ap-power.service"
-if [ -f "$AP_POWER_SERVICE" ] && ! grep -q "power_save off" "$AP_POWER_SERVICE"; then
-    sed -i '/iwconfig wlan0 txpower/a ExecStart=/sbin/iw dev wlan0 set power_save off' "$AP_POWER_SERVICE"
-    systemctl daemon-reload
-    echo "WiFi power save disable added to cedar-ap-power.service"
-else
-    echo "cedar-ap-power.service not found or already patched"
-fi
-POWERSAVEEOF
-then
-    echo "WiFi power save configuration updated"
-else
-    echo "Warning: failed to update WiFi power save setting, continuing anyway"
-fi
-
-# Enable IMX290/IMX462 High Conversion Gain mode via kernel module parameter.
-echo "Enabling IMX290/IMX462 High Conversion Gain mode..."
-if ! grep -qx "options imx290 hcg_mode=1" /etc/modprobe.d/imx290.conf 2>/dev/null; then
-    sudo bash -c 'cat > /etc/modprobe.d/imx290.conf <<EOF
-options imx290 hcg_mode=1
-EOF'
-    echo "  Written /etc/modprobe.d/imx290.conf"
-else
-    echo "  /etc/modprobe.d/imx290.conf already correct, skipping"
-fi
-
-# Update boot partition kernel to match installed kernel package.
-# apt upgrade installs new kernels to /boot on the ext4 partition but the
-# bootloader reads kernel8.img from the FAT partition at /boot/firmware.
-# A reboot is required for a newly copied kernel to take effect.
-# (Pi 5 / BCM2712 not covered.)
-echo "Checking boot partition kernel..."
-NEWEST_V8=$(ls /boot/vmlinuz-*rpi-v8 2>/dev/null | sort -V | tail -1)
-if [ -n "$NEWEST_V8" ]; then
-    if cmp -s "$NEWEST_V8" /boot/firmware/kernel8.img; then
-        echo "  kernel8.img already matches $(basename $NEWEST_V8), skipping"
-    else
-        echo "  Installing $(basename $NEWEST_V8) as kernel8.img (effective on next reboot)"
-        sudo cp "$NEWEST_V8" /boot/firmware/kernel8.img
-    fi
-else
-    echo "  No rpi-v8 kernel found, skipping kernel8.img update"
-fi
+# Board-specific steps, in their own scripts (run with bash: the updater only
+# makes unpack.sh executable).
+model=$(tr -d '\0' < /proc/device-tree/model)
+case "$model" in
+    "Raspberry Pi"*)
+        bash ./unpack_rpi.sh
+        ;;
+    "Radxa"*)
+        bash ./unpack_radxa.sh
+        ;;
+    *)
+        echo "ERROR: unknown board \"$model\"" >&2
+        exit 1
+        ;;
+esac
 
 echo "Unpack complete!"
