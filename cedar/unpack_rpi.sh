@@ -138,6 +138,24 @@ fi
 # data, before moving on.
 sync -f /boot/firmware
 
+# Camera detection runs once per boot: its unit stays active once run, so
+# restarting cedar.service (which Wants= it) doesn't re-run it mid-session.
+echo "Updating camera-detection.service..."
+UNIT=/etc/systemd/system/camera-detection.service
+if [ ! -f $UNIT ]; then
+    echo "  not found, skipping"
+elif grep -q "^RemainAfterExit=yes" $UNIT; then
+    echo "  already up to date, skipping"
+else
+    sudo sed -i 's/^Type=oneshot$/Type=oneshot\nRemainAfterExit=yes/' $UNIT
+    if grep -q "^RemainAfterExit=yes" $UNIT; then
+        sudo systemctl daemon-reload
+        echo "  added RemainAfterExit=yes"
+    else
+        echo "Warning: could not update $UNIT, continuing anyway"
+    fi
+fi
+
 # Mask periodic timers that are useless/harmful on a headless embedded device.
 echo "Masking unnecessary periodic timers..."
 for timer in apt-daily.timer apt-daily-upgrade.timer man-db.timer dpkg-db-backup.timer e2scrub_all.timer; do
