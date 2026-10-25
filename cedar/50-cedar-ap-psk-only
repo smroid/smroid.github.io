@@ -1,0 +1,49 @@
+#!/bin/sh
+# NetworkManager dispatcher script: make Hopper's access point offer plain
+# WPA-PSK only.
+#
+# NetworkManager always configures an AP with key_mgmt "WPA-PSK
+# WPA-PSK-SHA256", and with PMF disabled some iPads fail the handshake on
+# WPA-PSK-SHA256. See hopper-server/wifi.md, "PMF and Apple Client
+# Compatibility (October 2026)".
+#
+# Installed to /etc/NetworkManager/dispatcher.d/ (root-owned, mode 755).
+# NetworkManager runs it with the interface and action as $1 and $2.
+
+[ "$2" = "up" ] && [ "$CONNECTION_ID" = "cedar-ap" ] || exit 0
+
+WPA_CLI="/usr/sbin/wpa_cli -i $1"
+log() { logger -t cedar-ap-psk-only "$*"; }
+
+ID=$($WPA_CLI list_networks | awk '/\[CURRENT\]/ {print $1}')
+if [ -z "$ID" ]; then
+    log "no current network on $1; leaving key_mgmt unchanged"
+    exit 0
+fi
+if [ "$($WPA_CLI get_network "$ID" key_mgmt)" = "WPA-PSK" ]; then
+    log "$1 network $ID already WPA-PSK only"
+    exit 0
+fi
+
+if [ "$($WPA_CLI set_network "$ID" key_mgmt WPA-PSK)" != "OK" ]; then
+    log "failed to set key_mgmt on $1 network $ID"
+    exit 0
+fi
+# Restart the AP inside wpa_supplicant so the beacon is rebuilt;
+# enable_network/disable_network alone leave the old RSN element advertised.
+#
+# Restart twice. On the Pi, brcmfmac passes the key management to the
+# firmware as "wpa_auth" after the firmware has already built the beacon's
+# RSN element, so each AP start advertises the wpa_auth of the start before
+# it. The first restart loads the new value and the second advertises it.
+# Drivers that build the beacon from wpa_supplicant's RSN element need only
+# one, and the second is harmless. See wifi.md.
+restart_ap() {
+    $WPA_CLI disconnect > /dev/null
+    sleep 1
+    $WPA_CLI reconnect > /dev/null
+}
+restart_ap
+sleep 2
+restart_ap
+log "restricted $1 network $ID to WPA-PSK"
