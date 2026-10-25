@@ -43,6 +43,19 @@ cp mp_com.dat mp_com.dat.sig data
 echo "Extracting hopper_flutter..."
 tar -xzf hopper_flutter.tar.gz -C hopper-aim
 
+# Install the NetworkManager dispatcher script that restricts the access point
+# to plain WPA-PSK. It takes effect the next time the AP comes up (reboot or
+# mode switch); the AP isn't restarted here, since the client applying this
+# update is likely connected through it.
+echo "Updating access point dispatcher script..."
+DISPATCHER_SCRIPT=/etc/NetworkManager/dispatcher.d/50-cedar-ap-psk-only
+if cmp -s 50-cedar-ap-psk-only $DISPATCHER_SCRIPT; then
+    echo "  already up to date, skipping"
+else
+    sudo install -o root -g root -m 755 50-cedar-ap-psk-only $DISPATCHER_SCRIPT
+    echo "  installed $DISPATCHER_SCRIPT"
+fi
+
 # Board-specific steps, in their own scripts (run with bash: the updater only
 # makes unpack.sh executable).
 model=$(tr -d '\0' < /proc/device-tree/model)
