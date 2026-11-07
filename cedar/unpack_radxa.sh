@@ -35,3 +35,28 @@ else
         echo "Warning: could not update $UNIT, continuing anyway"
     fi
 fi
+
+# Commit the root filesystem's journal at the default 5 s, not Armbian's
+# commit=120. Takes effect at the next boot.
+# TODO: remove once the October 2026 Radxa zygote SD cards are used up.
+echo "Updating root filesystem commit interval..."
+if grep -q "commit=" /etc/fstab; then
+    sudo sed -i -E 's/,commit=[0-9]+//' /etc/fstab
+    echo "  removed commit= from /etc/fstab"
+else
+    echo "  already up to date, skipping"
+fi
+
+# Journal the root filesystem in ordered mode, not Armbian's writeback mode,
+# in which a power cut can leave recently written files full of zeros. A
+# default mount option, so safe to change while mounted; takes effect at the
+# next boot.
+# TODO: remove once the October 2026 Radxa zygote SD cards are used up.
+echo "Updating root filesystem data mode..."
+ROOT_DEV=$(findmnt -n -o SOURCE /)
+if sudo dumpe2fs -h $ROOT_DEV 2>/dev/null | grep -q journal_data_writeback; then
+    sudo tune2fs -o ^journal_data_writeback $ROOT_DEV > /dev/null
+    echo "  cleared journal_data_writeback on $ROOT_DEV"
+else
+    echo "  already up to date, skipping"
+fi

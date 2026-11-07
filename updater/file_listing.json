@@ -11,7 +11,7 @@
     "version.txt"
   ],
   "fileSizes": {
-    "cedar-updater.gz": 2179254,
+    "cedar-updater.gz": 2181487,
     "cedar-updater.gz.sig": 256,
     "public_key.pem": 451,
     "public_key.pem.sig": 256,
@@ -22,15 +22,15 @@
     "version.txt": 6
   },
   "fileSha256": {
-    "cedar-updater.gz": "2232308ba8cef1ef0aea7718de01c317e8a103d5059062dc81aed483bf7dad17",
-    "cedar-updater.gz.sig": "1226f4e393d066c2a5813804b8a22b541f660b44a2f26cc7d657cc52c3b8e210",
+    "cedar-updater.gz": "748f296de3ab8fd666875058ff1a4f3fce710f2284a154bb3e10ce275982166c",
+    "cedar-updater.gz.sig": "4af3d1fd0a975f29a627dd47bce85cbfbee982e050ddcf7942d55799829726a5",
     "public_key.pem": "dbb0302614f1eb31a4d7128aecac65428274cabc43600ce0a95fc4046a4d19ca",
     "public_key.pem.sig": "7ea64dafd16e422be6cbfcf1b86a899c685c899dd20b88915c4acaf8e4be3f85",
     "restart.sh": "fe7da1aef8924bd44d45b358b0519e7a9aa22881db31c06ca68d0848a775a5fd",
     "restart.sh.sig": "55d2225e39d755477a4ef141970eb46b5773a87e85e3e65331833e98f22ce241",
     "unpack.sh": "1c5b0091558991dfa6f0e9f8d86cd58bd046f0313b3f781c4f1299f6f4a16aef",
     "unpack.sh.sig": "c1bfb7ed40ff3a5545dab9c32260cfdc5cb162a5702101ac604b590f21c3368e",
-    "version.txt": "8c54bfab7f1ae9bd1a7148eae41e7b0a8f4ad3726e0cac70f823a2d45db9e60c"
+    "version.txt": "51c18dc8694861beb47a67894e61044864214435389f6d3a274704d9566ff96c"
   },
   "count": 9
 }

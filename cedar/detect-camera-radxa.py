@@ -64,6 +64,21 @@ def log(message):
     logging.info(message)
     print(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}")
 
+def write_file_durably(path, text):
+    """Replace the file at `path` with `text`: write a scratch file, flush
+    it to storage, rename it over `path`, then flush the directory."""
+    tmp_path = f"{path}.tmp"
+    with open(tmp_path, 'w') as f:
+        f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_path, path)
+    dir_fd = os.open(os.path.dirname(path) or ".", os.O_RDONLY)
+    try:
+        os.fsync(dir_fd)
+    finally:
+        os.close(dir_fd)
+
 def find_v4l2_node(predicate):
     """The /dev path of the first V4L2 device whose name satisfies
     `predicate`, with that name; or (None, None)."""
@@ -190,8 +205,7 @@ def set_camera_overlay(overlay):
         names.append(overlay)
     lines[i] = f"user_overlays={' '.join(names)}"
 
-    with open(ARMBIAN_ENV, 'w') as f:
-        f.write('\n'.join(lines) + '\n')
+    write_file_durably(ARMBIAN_ENV, '\n'.join(lines) + '\n')
 
 def current_camera_overlay():
     """Our camera overlay selected in armbianEnv.txt's user_overlays, or
@@ -219,8 +233,7 @@ def clear_tried():
         pass
 
 def mark_success():
-    with open(STATUS_FILE, 'w') as f:
-        f.write("success\n")
+    write_file_durably(STATUS_FILE, "success\n")
     clear_tried()
 
 def try_next_overlay(failed):
@@ -230,8 +243,7 @@ def try_next_overlay(failed):
     tried = get_tried()
     if failed is not None and failed not in tried:
         tried.append(failed)
-    with open(TRIED_FILE, 'w') as f:
-        f.write(' '.join(tried) + '\n')
+    write_file_durably(TRIED_FILE, ' '.join(tried) + '\n')
 
     for index, (overlay, _) in enumerate(OVERLAYS):
         if overlay not in tried:
@@ -257,8 +269,7 @@ def add_overlay(overlay_index):
         set_camera_overlay(overlay)
 
         # Write status.
-        with open(STATUS_FILE, 'w') as f:
-            f.write(f"added_overlay_{overlay_index}\n")
+        write_file_durably(STATUS_FILE, f"added_overlay_{overlay_index}\n")
 
         log("Overlay selected, rebooting...")
         subprocess.run(["/sbin/reboot"])
@@ -272,8 +283,7 @@ def remove_overlay():
     log(f"Removing all camera overlays from {ARMBIAN_ENV}")
     remove_all_overlays()
 
-    with open(STATUS_FILE, 'w') as f:
-        f.write("removed_overlay\n")
+    write_file_durably(STATUS_FILE, "removed_overlay\n")
 
     log("Overlay removed, rebooting...")
     subprocess.run(["/sbin/reboot"])
@@ -331,14 +341,12 @@ def main():
 
         except (ValueError, IndexError) as e:
             log(f"Invalid overlay index in status: {status}")
-            with open(STATUS_FILE, 'w') as f:
-                f.write("failed\n")
+            write_file_durably(STATUS_FILE, "failed\n")
             sys.exit(1)
 
     elif status == "removed_overlay":
         log("Final run - camera could not be detected with any configuration")
-        with open(STATUS_FILE, 'w') as f:
-            f.write("failed\n")
+        write_file_durably(STATUS_FILE, "failed\n")
         sys.exit(1)
 
     elif status == "success":
