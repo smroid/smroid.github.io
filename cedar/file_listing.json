@@ -33,7 +33,7 @@
     "default_database.npz.sig": 256,
     "detect-camera-radxa.py": 13348,
     "detect-camera-radxa.py.sig": 256,
-    "hopper-server.gz": 13958478,
+    "hopper-server.gz": 13956791,
     "hopper-server.gz.sig": 256,
     "hopper_flutter.tar.gz": 25810234,
     "hopper_flutter.tar.gz.sig": 256,
@@ -47,7 +47,7 @@
     "restart.sh.sig": 256,
     "unpack.sh": 2496,
     "unpack.sh.sig": 256,
-    "unpack_radxa.sh": 2528,
+    "unpack_radxa.sh": 3392,
     "unpack_radxa.sh.sig": 256,
     "unpack_rpi.sh": 6648,
     "unpack_rpi.sh.sig": 256,
@@ -60,8 +60,8 @@
     "default_database.npz.sig": "c8da259a5993246bc0477e0a2309a4451f3a32a8f9c49a21afebbd0844131c68",
     "detect-camera-radxa.py": "f3eeec585c5f524cc7c01e1bbda7f0fb1659b542e015f7841415d0b6b2c96ca7",
     "detect-camera-radxa.py.sig": "a532652f037c8b628e0b2c0066d85dce02da8ae8e6927adf9e1b06f9b8b6324e",
-    "hopper-server.gz": "fd8801846e44f5c8e4d106ec508ae62af2f0d3ec433c1d61ea0f4bef2edb461c",
-    "hopper-server.gz.sig": "38abaae7fa78b416961b3f3471360fa9b459842a03ebdb22bfc8dff2dceb4945",
+    "hopper-server.gz": "8d5b50d7279bbfa9687f28f0302f7312117e3223bdbc7f54331dd251103ead97",
+    "hopper-server.gz.sig": "4bde86e235db17ce673fae1d59df6db95c708393a505644c80accec9d45a6152",
     "hopper_flutter.tar.gz": "1bb783738013e6ea49c6c4b273b115847eec8ff59ac8c16ba797c87e7316a1e1",
     "hopper_flutter.tar.gz.sig": "645cc0765a9df40add98f12ef6dd2b645976634944f72351eac41936c950c30e",
     "merged_catalog.sqlite.gz": "31d229378319a9db58ffb9bbac2d4b8b1eff81d7ba084f225a20df76a20c55d5",
@@ -74,11 +74,11 @@
     "restart.sh.sig": "553c7fdc3376bc4f6076b37ce8f1b75c17407dc84edfaf434013259e9979151c",
     "unpack.sh": "63e4275aa43ad5190e464a0ccd57c51818b4327b5c6c10dbfc16d0f06a3cdc72",
     "unpack.sh.sig": "f4374cc1695587ca90912a3d6284c9cfa49d8d25650ecb7eaf2a53d350736dfd",
-    "unpack_radxa.sh": "8cbc9bd790030a0af04fa97d490b03ecef83a75d80b2e0d8a189c2bd51a78139",
-    "unpack_radxa.sh.sig": "1d1ef11acae55b4945af1ad08f891049b7217ded72f1508b51eedd1f57be9f82",
+    "unpack_radxa.sh": "4843fa46ed3bb861dd4ce223d692e76e0ba821ee793d554c279c7bb86b2961b0",
+    "unpack_radxa.sh.sig": "50c52009b77a5e102f03035bcad797c72a36cebb1a42f5433bea1f0f5bd78258",
     "unpack_rpi.sh": "ecbea5e7a563f6dc0985dbe3adcbfb5544a7c3cfa5e2ff2c8c955ed36c352dca",
     "unpack_rpi.sh.sig": "f2b8d2b2d81eb87079e0d72c6445b5978eef024c5f45bba71455a6db07875f2c",
-    "version.txt": "c0a5a6493b8efd6757e5fecc6fccd3dfc513b1963331f7c8af2c4d6854f9bf66"
+    "version.txt": "908276d7e66deb879777e2b9dd045d61940606c46552e360af898b697ab792dd"
   },
   "count": 25
 }

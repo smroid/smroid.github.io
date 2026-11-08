@@ -60,3 +60,22 @@ if sudo dumpe2fs -h $ROOT_DEV 2>/dev/null | grep -q journal_data_writeback; then
 else
     echo "  already up to date, skipping"
 fi
+
+# Stop Armbian rewriting armbianEnv.txt at every boot: U-Boot reads it without
+# replaying the filesystem's journal, so a power cut soon after a rewrite can
+# leave the unit unable to boot. Takes effect at the next boot.
+# TODO: remove once the October 2026 Radxa zygote SD cards are used up.
+echo "Updating armbian-hardware-optimization..."
+AHO=/usr/lib/armbian/armbian-hardware-optimization
+if [ ! -f $AHO ]; then
+    echo "  not found, skipping"
+elif grep -qE "^\s*add_usb_storage_quirks &$" $AHO; then
+    sudo sed -i -E 's/^(\s*)add_usb_storage_quirks &$/\1: # add_usb_storage_quirks: disabled for Hopper/' $AHO
+    if grep -qE "^\s*add_usb_storage_quirks &$" $AHO; then
+        echo "Warning: could not update $AHO, continuing anyway"
+    else
+        echo "  disabled its rewrite of armbianEnv.txt"
+    fi
+else
+    echo "  already up to date, skipping"
+fi
