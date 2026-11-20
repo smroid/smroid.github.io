@@ -47,6 +47,25 @@ else
     echo "  already up to date, skipping"
 fi
 
+# Mount the root filesystem without online discard, which the vendor kernel
+# enables by default: a freed block reads as zeros immediately, while the
+# on-card metadata U-Boot reads can still point at it, so a power cut soon after
+# a boot file is replaced leaves the board unbootable. Takes effect now (by
+# remounting) and at every boot (via /etc/fstab).
+# TODO: remove once the October 2026 Radxa zygote SD cards are used up.
+echo "Disabling online discard on the root filesystem..."
+if grep -qE "\s/\s+ext4\s+\S*nodiscard" /etc/fstab; then
+    echo "  already up to date, skipping"
+else
+    sudo sed -i -E '/\s\/\s+ext4\s/{/nodiscard/!s/defaults/defaults,nodiscard/}' /etc/fstab
+    if grep -qE "\s/\s+ext4\s+\S*nodiscard" /etc/fstab; then
+        echo "  added nodiscard to /etc/fstab"
+    else
+        echo "Warning: could not update /etc/fstab, continuing anyway"
+    fi
+fi
+sudo mount -o remount,nodiscard / || echo "Warning: could not remount / with nodiscard"
+
 # Journal the root filesystem in ordered mode, not Armbian's writeback mode,
 # in which a power cut can leave recently written files full of zeros. A
 # default mount option, so safe to change while mounted; takes effect at the

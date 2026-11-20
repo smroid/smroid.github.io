@@ -72,4 +72,11 @@ case "$model" in
         ;;
 esac
 
+# Write everything unpacked and installed above to storage now. Updaters
+# before 1.0.6 don't sync after unpacking, and on a filesystem in writeback
+# mode with a long commit interval, a power cut soon after the update could
+# otherwise leave the new files empty.
+echo "Syncing storage..."
+sync
+
 echo "Unpack complete!"

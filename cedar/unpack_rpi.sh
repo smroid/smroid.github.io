@@ -112,6 +112,20 @@ else
     echo "Thermal clock pin already present in config.txt, skipping"
 fi
 
+# Run the WiFi SDIO bus at 25 MHz for timing margin when hot (see wifi.md).
+# Takes effect at the next boot.
+if ! grep -q "BEGIN sdio clock" /boot/firmware/config.txt; then
+    echo "Setting WiFi SDIO clock to 25 MHz..."
+    sudo tee -a /boot/firmware/config.txt > /dev/null <<'EOF'
+# BEGIN sdio clock
+dtparam=sdio_overclock=25
+# END sdio clock
+EOF
+    echo "  Added SDIO clock setting to config.txt"
+else
+    echo "SDIO clock setting already present in config.txt, skipping"
+fi
+
 # Update boot partition kernel to match installed kernel package.
 # apt upgrade installs new kernels to /boot on the ext4 partition but the
 # bootloader reads kernel8.img from the FAT partition at /boot/firmware.
