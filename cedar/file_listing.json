@@ -33,7 +33,7 @@
     "default_database.npz.sig": 256,
     "detect-camera-radxa.py": 13348,
     "detect-camera-radxa.py.sig": 256,
-    "hopper-server.gz": 13961953,
+    "hopper-server.gz": 13974234,
     "hopper-server.gz.sig": 256,
     "hopper_flutter.tar.gz": 25810234,
     "hopper_flutter.tar.gz.sig": 256,
@@ -60,8 +60,8 @@
     "default_database.npz.sig": "c8da259a5993246bc0477e0a2309a4451f3a32a8f9c49a21afebbd0844131c68",
     "detect-camera-radxa.py": "f3eeec585c5f524cc7c01e1bbda7f0fb1659b542e015f7841415d0b6b2c96ca7",
     "detect-camera-radxa.py.sig": "a532652f037c8b628e0b2c0066d85dce02da8ae8e6927adf9e1b06f9b8b6324e",
-    "hopper-server.gz": "3219c790a0afbd4de830b9e6ea7835308348415a4389a1ea92f4b43a290c9f84",
-    "hopper-server.gz.sig": "30f6f665e2650eb7b5e3fc761593a26d3bfdc85ca4c2ebc88c65e75e5cb49513",
+    "hopper-server.gz": "ed70147e718ae7832f32c56d0587a45058adbe8130f97337f4ac71c0cdc03af2",
+    "hopper-server.gz.sig": "037c149cb14db17f7bfd0f6dfcfb05864567c94df23de9b56474244f3815d217",
     "hopper_flutter.tar.gz": "1bb783738013e6ea49c6c4b273b115847eec8ff59ac8c16ba797c87e7316a1e1",
     "hopper_flutter.tar.gz.sig": "645cc0765a9df40add98f12ef6dd2b645976634944f72351eac41936c950c30e",
     "merged_catalog.sqlite.gz": "31d229378319a9db58ffb9bbac2d4b8b1eff81d7ba084f225a20df76a20c55d5",
@@ -78,7 +78,7 @@
     "unpack_radxa.sh.sig": "17a547c19421ea660d62ea7101bd8578abeb56fe45eb13687c633962861eca3f",
     "unpack_rpi.sh": "90487561a9a0758e9c3d7dd1eec52884c21b5537013039d1e8016806d7bb642e",
     "unpack_rpi.sh.sig": "2071e7f1c17f9c70ce26194160be2b784aa0004790ff4cad2cc7c39fe5353a11",
-    "version.txt": "406b9efb67a070bc32c23c3ac6c886a8d25cfac10b1861ef92e4166708aa6ce1"
+    "version.txt": "f4bedd06738564c6194c9054163ad13b21b71cf4ce0625f9466348a6a15cd465"
   },
   "count": 25
 }
